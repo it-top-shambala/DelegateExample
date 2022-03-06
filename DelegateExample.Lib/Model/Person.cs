@@ -16,5 +16,21 @@ namespace DelegateExample.Lib.Model
         
         [JsonPropertyName("phoneNumbers")]
         public List<string> PhoneNumbers { get; set; }
+
+        public Person()
+        {
+            FirstName = string.Empty;
+            LastName = string.Empty;
+            Address = new Address();
+            PhoneNumbers = new List<string>();
+        }
+
+        public Person(string firstName, string lastName, Address address, List<string> phoneNumbers)
+        {
+            FirstName = firstName;
+            LastName = lastName;
+            Address = address;
+            PhoneNumbers = phoneNumbers;
+        }
     }
 }

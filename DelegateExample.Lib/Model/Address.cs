@@ -12,5 +12,18 @@ namespace DelegateExample.Lib.Model
         
         [JsonPropertyName("postalCode")]
         public int PostalCode { get; set; }
+
+        public Address()
+        {
+            StreetAddress = string.Empty;
+            City = string.Empty;
+            PostalCode = 0;
+        }
+        public Address(string streetAddress, string city, int postalCode)
+        {
+            StreetAddress = streetAddress;
+            City = city;
+            PostalCode = postalCode;
+        }
     }
 }
