@@ -33,44 +33,22 @@ namespace DelegateExample.App
             do
             {
                 Console.WriteLine("Выберите пункт меню:");
-                foreach (var (item, action) in menu.menu)
+                foreach (var (item, name) in menu.menuS)
                 {
-                    Console.WriteLine($"{item.GetHashCode()}: {item.ToString()}");
+                    Console.WriteLine($"{item}: {name}");
                 }
 
-                var select = Console.ReadLine();
-                switch (select)
-                {
-                    case "1":
-                        var action = menu.menu[MenuItem.Export];
-                        action?.Invoke();
-                        break;
-                    case "2":
-                        action = menu.menu[MenuItem.Import];
-                        action?.Invoke();
-                        break;
-                    case "3":
-                        action = menu.menu[MenuItem.Edit];
-                        action?.Invoke();
-                        break;
-                    case "4":
-                        action = menu.menu[MenuItem.Show];
-                        action?.Invoke();
-                        break;
-                    case "0":
-                        action = menu.menu[MenuItem.Exit];
-                        action?.Invoke();
-                        break;
-                }
+                var select = Convert.ToInt32(Console.ReadLine());
+                menu.menu[select]?.Invoke();
             } while (!exit);
         }
 
-        static void EditPerson(Person person)
+        private static void EditPerson(Person person)
         {
             
         }
 
-        static void ShowPerson(Person person)
+        private static void ShowPerson(Person person)
         {
             CLI.Show("=== PERSON ===");
             CLI.Show($"Last name: {person.LastName}");
