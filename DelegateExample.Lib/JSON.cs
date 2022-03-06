@@ -8,47 +8,41 @@ namespace DelegateExample.Lib
     public class JSON
     {
         public string Path { get; set; }
+        public Person Person { get; set; }
+        
         public Action<string> Info;
         public Action<string> Error;
 
-        public void Export(Person person)
+        private void Exec(string message, Action action)
         {
-            Info?.Invoke($"{DateTime.Now:g} : INFO : экспорт данных персоны в {Path}");
+            Info?.Invoke($"{DateTime.Now:g} : START : {message}");
             try
             {
-                using var file = new FileStream(Path, FileMode.Create);
-                JsonSerializer.SerializeAsync(file, person);
-                Info?.Invoke($"{DateTime.Now:g} : INFO : экспорт данных персоны в {Path} закончился");
+                action?.Invoke();
+                Info?.Invoke($"{DateTime.Now:g} : STOP : {message}");
             }
-            catch (ArgumentException e)
-            {
-                Error?.Invoke($"{DateTime.Now:g} : ERROR : {e.Message}");
-            }
-            catch (NotSupportedException e)
+            catch (Exception e)
             {
                 Error?.Invoke($"{DateTime.Now:g} : ERROR : {e.Message}");
             }
         }
-
-        public Person Import()
+        
+        public void Export()
         {
-            Info?.Invoke($"{DateTime.Now:g} : INFO : импорт данных персоны из {Path}");
-            Person person = null;
-            try
+            Exec($"экспорт данных персоны в {Path}", () =>
+            {
+                using var file = new FileStream(Path, FileMode.Create);
+                JsonSerializer.SerializeAsync(file, Person);
+            });
+        }
+
+        public void Import()
+        {
+            Exec($"импорт данных персоны из {Path}", () =>
             {
                 using var file = new FileStream(Path, FileMode.Open);
-                person = JsonSerializer.DeserializeAsync<Person>(file).Result;
-            }
-            catch (ArgumentException e)
-            {
-                Error?.Invoke($"{DateTime.Now:g} : ERROR : {e.Message}");
-            }
-            catch (NotSupportedException e)
-            {
-                Error?.Invoke($"{DateTime.Now:g} : ERROR : {e.Message}");
-            }
-
-            return person;
+                Person = JsonSerializer.DeserializeAsync<Person>(file).Result;
+            });
         }
     }
 }
